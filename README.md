@@ -54,4 +54,3 @@ Theme selection is saved and persists between sessions.
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.</content>
-<parameter name="filePath">README.md
