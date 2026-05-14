@@ -53,5 +53,5 @@ Theme selection is saved and persists between sessions.
 
 ## License
 
-[Add your license here, e.g., MIT]</content>
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.</content>
 <parameter name="filePath">README.md
