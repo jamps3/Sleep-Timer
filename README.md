@@ -11,6 +11,10 @@ A simple GUI application for Windows that schedules your computer to go to sleep
 - **Theme Support**: Light, Dark, or System default theme with persistence.
 - **Sleep Tracking**: Displays how long you actually slept upon wake-up.
 
+## Screenshots
+
+![Sleep Timer Screenshot](screenshot.png)
+
 ## Requirements
 
 - Python 3.6+
