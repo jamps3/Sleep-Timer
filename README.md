@@ -1,55 +1,53 @@
-![Python](https://img.shields.io/badge/Python-3.10+-blue?logo=python)
-![Platform](https://img.shields.io/badge/Platform-Windows-lightgrey?logo=windows)
-![License](https://img.shields.io/badge/License-MIT-green?logo=open-source-initiative)
-![Build](https://img.shields.io/badge/Build-Stable-brightgreen?logo=check-circle)
+# Sleep Timer
 
-# <img src="feather.png" alt="Feather Badge" width="80" style="vertical-align: middle;"> Windows sleep timer utility with GUI
+A simple GUI application for Windows that schedules your computer to go to sleep after a specified countdown time.
 
-User-friendly sleep timer for Windows.
+## Features
 
-Choose your delay, watch the countdown, and drift computer into sleep — with a feather-light touch.
+- **Preset Timers**: Choose from common sleep delays (15, 30, 45, 60, 75, 90, 105, 120 minutes).
+- **Custom Timer**: Enter any custom time in minutes.
+- **Countdown Display**: Real-time countdown showing remaining time.
+- **Abort Functionality**: Cancel the countdown at any time.
+- **Theme Support**: Light, Dark, or System default theme with persistence.
+- **Sleep Tracking**: Displays how long you actually slept upon wake-up.
 
----
+## Requirements
 
-## 🖥️ Features
+- Python 3.6+
+- tkinter (usually included with Python)
+- Windows OS (uses Windows-specific sleep command)
 
-- ⏱️ Live countdown with minute:second display
-- ❌ Abort anytime with a single key or button
-- 🖱️ GUI with dropdowns and custom time entry
-- 💤 Puts your system to sleep using native Windows calls
-- 🌅 Displays how long you slept when you return
+## Installation
 
----
+1. Clone or download the repository.
+2. Ensure Python is installed.
+3. Run the application: `python sleep_timer_gui.py`
 
-## 🚀 How to Use
+## Usage
 
-### CLI
-```bash
-python sleep_timer.py 30
-```
+1. Select a sleep delay from the dropdown or enter a custom time.
+2. Click "Start Countdown" to begin the timer.
+3. The app will show the remaining time.
+4. Your computer will enter sleep mode when the timer reaches zero.
+5. Upon waking, the app displays how long you slept.
 
-### GUI
-```bash
-python sleep_timer_gui.py
-```
+To abort the countdown, click the "Abort" button.
 
-## Latest release: [sleep_timer_gui.exe](https://github.com/jamps3/Scripts/blob/master/sleep_timer/dist/sleep_timer_gui.exe)
+## Themes
 
-![screenshot](https://github.com/jamps3/Scripts/blob/master/sleep_timer/screenshot.png)
+- **System Default**: Matches your Windows theme preference.
+- **Light**: Light color scheme.
+- **Dark**: Dark color scheme with dark title bar on Windows.
 
-## Development
+Theme selection is saved and persists between sessions.
 
-### Create .exe
-```bash
-pyinstaller --onefile --windowed --icon=feather.ico sleep_timer_gui.py
-```
+## Notes
 
-## Assets
-- feather.png – icon used in GUI and .exe
-- feather.ico – converted icon for Windows executable
+- This application uses Windows' built-in sleep functionality.
+- Ensure you save any work before starting the timer.
+- The app will resume and show sleep duration after wake-up.
 
-## Future Ideas
-- Tray icon with countdown tooltip
-- Sound cues before sleep
-- Cross-platform support (Linux/macOS)
-- Splash screen with animated feather
+## License
+
+[Add your license here, e.g., MIT]</content>
+<parameter name="filePath">README.md
