@@ -15,6 +15,7 @@ A simple GUI application for Windows that schedules your computer to go to sleep
 
 | Light Theme | Dark Theme |
 |-------------|------------|
+| ![Light Theme](screenshot.png) | ![Dark Theme](screenshot2.png) |
 | ![Light Screenshot](light_screenshot.png) | ![Dark Screenshot](dark_screenshot.png) |
 
 ## Requirements
