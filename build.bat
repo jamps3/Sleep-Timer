@@ -1,9 +1,8 @@
 @echo off
-setlocal EnableDelayedExpansion
+setlocal
+cd /d "%~dp0"
 set /p VERSION=<VERSION
-pyinstaller --onefile --windowed --icon=feather.ico --name SleepTimer_%VERSION% sleep_timer_gui.py
-for /f "tokens=1-3 delims=." %%a in ("%VERSION%") do (
-set /a patch=%%c + 1
-set NEWVER=%%a.%%b.!patch!
-echo !NEWVER! > VERSION
-)
+python -m PyInstaller --noconfirm sleep_timer.spec
+if errorlevel 1 exit /b 1
+echo Built dist\SleepTimer_%VERSION%.exe
+rem VERSION identifies this release; bump it deliberately, not after each build.

@@ -1,3 +1,5 @@
 settings.json
 SleepTimer_*.spec
 build/
+__pycache__/
+*.pyc

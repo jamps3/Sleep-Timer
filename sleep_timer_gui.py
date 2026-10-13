@@ -11,7 +11,8 @@ from pathlib import Path
 from tkinter import messagebox, ttk
 
 
-SETTINGS_FILE = Path(__file__).resolve().parent / "settings.json"
+APP_DIRECTORY = Path(sys.executable).resolve().parent if getattr(sys, "frozen", False) else Path(__file__).resolve().parent
+SETTINGS_FILE = APP_DIRECTORY / "settings.json"
 PRESETS = (15, 30, 45, 60, 75, 90, 105, 120)
 LIGHT_THEME = dict(window="#f5f6f5", surface="#ffffff", text="#18211e",
                    muted="#53615b", border="#b7c5bd", accent="#116650",
@@ -81,7 +82,7 @@ def set_windows_dark_title_bar(window, enabled):
 class SleepTimerApp:
     def __init__(self, root):
         self.root = root
-        self.version = "1.1.1"
+        self.version = "1.1.2"
         root.title("Sleep Timer")
         root.geometry("400x520")
         root.minsize(380, 520)
@@ -299,6 +300,22 @@ class SleepTimerApp:
 
 
 if __name__ == "__main__":
+    import argparse
+    parser = argparse.ArgumentParser(description="Windows Sleep Timer")
+    parser.add_argument("--preview", choices=("light", "dark"), help="Safe preview: sleep is disabled")
+    parser.add_argument("--auto-close-ms", type=int, default=0, help="Close safe preview automatically")
+    options = parser.parse_args()
+    if options.auto_close_ms and not options.preview:
+        parser.error("--auto-close-ms requires --preview")
     root = tk.Tk()
     app = SleepTimerApp(root)
+    if options.preview:
+        root.title("Sleep Timer Preview - " + options.preview)
+        app.theme_var.set(options.preview)
+        app.apply_theme()
+        app._suspend = lambda: app.events.put((False, "Preview mode"))
+        app.start_button.config(command=lambda: None)
+        root.unbind("<Return>")
+        if options.auto_close_ms > 0:
+            root.after(options.auto_close_ms, app.close)
     root.mainloop()

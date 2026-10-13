@@ -2,6 +2,13 @@
 
 A compact Windows sleep timer with large, high-contrast time controls.
 
+## Download 1.1.2
+
+[Download SleepTimer_1.1.2.exe for Windows x64](https://github.com/jamps3/Sleep-Timer/raw/refs/heads/main/dist/SleepTimer_1.1.2.exe)
+
+No Python installation is needed for the executable. This build is unsigned;
+Windows may show a reputation warning. Only run downloads from this repository.
+
 ## Features
 
 - Eight visible minute presets: 15, 30, 45, 60, 75, 90, 105 and 120.
@@ -45,8 +52,21 @@ py preview_timer.py --output-dir previews
 ```
 
 The preview runner disables sleep. Automated tests do not exercise actual system
-suspension or wake-up. Existing packaged executables remain the old release until
-a separate build is made and verified.
+suspension or wake-up. Version 1.1.2 is packaged with PyInstaller and smoke-tested
+in safe preview mode; real system suspension/wake-up is not yet tested.
+
+## Building
+
+Install PyInstaller, then run `build.bat`. `VERSION` identifies the release and
+is not incremented automatically. The checked-in spec handles embedded Tcl/Tk 9
+resources as well as conventional Tcl/Tk installations.
+
+```powershell
+py capture_release.py dist/SleepTimer_1.1.2.exe --output-dir previews
+```
+
+This captures the packaged app in both themes with sleep disabled. FrameFree is
+now also an independent project in `../Screenshotter`, with its own tests and Git.
 
 ## License
 
