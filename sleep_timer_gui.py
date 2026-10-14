@@ -13,13 +13,18 @@ from tkinter import messagebox, ttk
 
 APP_DIRECTORY = Path(sys.executable).resolve().parent if getattr(sys, "frozen", False) else Path(__file__).resolve().parent
 SETTINGS_FILE = APP_DIRECTORY / "settings.json"
-PRESETS = (15, 30, 45, 60, 75, 90, 105, 120)
+APP_VERSION = (Path(__file__).resolve().parent / "VERSION").read_text(encoding="utf-8").strip()
+PRESETS = (1, 2, 3, 5, 15, 30, 45, 60, 75, 90, 105, 120)
 LIGHT_THEME = dict(window="#f5f6f5", surface="#ffffff", text="#18211e",
                    muted="#53615b", border="#b7c5bd", accent="#116650",
-                   accent_text="#ffffff", selected="#d9f3e6")
+                   accent_text="#ffffff", selected="#d9f3e6", hover="#e6eee9",
+                   accent_hover="#0b4e3e", danger="#b42332", danger_hover="#941c29",
+                   danger_text="#ffffff")
 DARK_THEME = dict(window="#141817", surface="#222a26", text="#f2f7f4",
                   muted="#b7c6bd", border="#64776b", accent="#a6edbc",
-                  accent_text="#102319", selected="#345442")
+                  accent_text="#102319", selected="#345442", hover="#344239",
+                  accent_hover="#c3f6d2", danger="#e85b68", danger_hover="#ff7c88",
+                  danger_text="#240a0d")
 
 
 def valid_minutes_input(value):
@@ -82,8 +87,8 @@ def set_windows_dark_title_bar(window, enabled):
 class SleepTimerApp:
     def __init__(self, root):
         self.root = root
-        self.version = "1.1.2"
-        root.title("Sleep Timer")
+        self.version = APP_VERSION
+        root.title(f"Sleep Timer {self.version}")
         root.geometry("400x520")
         root.minsize(380, 520)
         root.protocol("WM_DELETE_WINDOW", self.close)
@@ -93,6 +98,7 @@ class SleepTimerApp:
         self.running = False
         self.sleeping = False
         self.tick_id = None
+        self.hovered_button = None
         self.events = queue.Queue()
         self.style = ttk.Style(root)
         self.style.theme_use("clam")
@@ -140,6 +146,9 @@ class SleepTimerApp:
                                       font=("Segoe UI", 13), relief="flat", pady=11, padx=18,
                                       state="disabled", cursor="hand2")
         self.abort_button.pack(side="right", padx=(8, 0))
+        for button in [*self.preset_buttons, self.start_button, self.abort_button]:
+            button.bind("<Enter>", lambda event, b=button: self._hover_button(b, True))
+            button.bind("<Leave>", lambda event, b=button: self._hover_button(b, False))
         self.status = tk.Label(self.shell, text="", font=("Segoe UI", 10), wraplength=330)
         self.status.pack(fill="x", pady=(10, 0))
         self.minutes_var.trace_add("write", self._preview)
@@ -193,6 +202,7 @@ class SleepTimerApp:
         self.custom_entry.config(state="disabled")
         for button in self.preset_buttons:
             button.config(state="disabled")
+        self._style_presets()
         self._tick()
 
     def _tick(self):
@@ -206,6 +216,7 @@ class SleepTimerApp:
             self.running = False
             self.sleeping = True
             self.abort_button.config(state="disabled")
+            self._style_actions()
             self.status.config(text="Putting Windows to sleep...")
             threading.Thread(target=self._suspend, daemon=True).start()
         else:
@@ -268,10 +279,34 @@ class SleepTimerApp:
         c = self.theme
         for minutes, button in zip(PRESETS, self.preset_buttons):
             selected = self.minutes_var.get() == str(minutes)
-            button.config(bg=c["selected"] if selected else c["surface"], fg=c["text"],
+            hover = self.hovered_button is button and str(button["state"]) != "disabled"
+            button.config(bg=c["hover"] if hover else c["selected"] if selected else c["surface"], fg=c["text"],
                           activebackground=c["selected"], activeforeground=c["text"],
                           disabledforeground=c["muted"], highlightbackground=c["border"],
                           highlightcolor=c["accent"], highlightthickness=1)
+        self._style_actions()
+
+    def _hover_button(self, button, entered):
+        if entered:
+            self.hovered_button = button
+        elif self.hovered_button is button:
+            self.hovered_button = None
+        self._style_presets()
+
+    def _style_actions(self):
+        c = self.theme
+        start_hover = self.hovered_button is self.start_button and str(self.start_button["state"]) != "disabled"
+        self.start_button.config(bg=c["accent_hover"] if start_hover else c["accent"],
+                                 fg=c["accent_text"], activebackground=c["accent_hover"],
+                                 activeforeground=c["accent_text"], disabledforeground=c["muted"])
+        cancel_hover = self.hovered_button is self.abort_button and str(self.abort_button["state"]) != "disabled"
+        danger = self.running and str(self.abort_button["state"]) != "disabled"
+        normal = c["danger"] if danger else c["surface"]
+        hover = c["danger_hover"] if danger else c["hover"]
+        foreground = c["danger_text"] if danger else c["text"]
+        self.abort_button.config(bg=hover if cancel_hover else normal, fg=foreground,
+                                 activebackground=hover, activeforeground=foreground,
+                                 disabledforeground=c["muted"])
 
     def apply_theme(self):
         dark = self.theme_var.get() == "dark" or (self.theme_var.get() == "system" and system_prefers_dark_theme())
@@ -285,10 +320,6 @@ class SleepTimerApp:
                                  disabledbackground=c["surface"], disabledforeground=c["muted"],
                                  highlightbackground=c["border"], highlightcolor=c["accent"],
                                  selectbackground=c["selected"], selectforeground=c["text"])
-        self.start_button.config(bg=c["accent"], fg=c["accent_text"], activebackground=c["selected"],
-                                 activeforeground=c["text"], disabledforeground=c["muted"])
-        self.abort_button.config(bg=c["surface"], fg=c["text"], activebackground=c["selected"],
-                                 activeforeground=c["text"], disabledforeground=c["muted"])
         self.style.configure("TCombobox", fieldbackground=c["surface"], background=c["surface"],
                              foreground=c["text"], arrowcolor=c["text"], bordercolor=c["border"])
         self.style.map("TCombobox", fieldbackground=[("readonly", c["surface"])],
@@ -304,18 +335,26 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Windows Sleep Timer")
     parser.add_argument("--preview", choices=("light", "dark"), help="Safe preview: sleep is disabled")
     parser.add_argument("--auto-close-ms", type=int, default=0, help="Close safe preview automatically")
+    parser.add_argument("--preview-running", action="store_true", help="Show active timer in safe preview")
     options = parser.parse_args()
     if options.auto_close_ms and not options.preview:
         parser.error("--auto-close-ms requires --preview")
+    if options.preview_running and not options.preview:
+        parser.error("--preview-running requires --preview")
     root = tk.Tk()
     app = SleepTimerApp(root)
     if options.preview:
-        root.title("Sleep Timer Preview - " + options.preview)
+        root.title(f"Sleep Timer {app.version} Preview - {options.preview}")
         app.theme_var.set(options.preview)
         app.apply_theme()
         app._suspend = lambda: app.events.put((False, "Preview mode"))
         app.start_button.config(command=lambda: None)
         root.unbind("<Return>")
+        if options.preview_running:
+            app.start_countdown()
         if options.auto_close_ms > 0:
-            root.after(options.auto_close_ms, app.close)
+            def close_preview():
+                app.abort_countdown()
+                app.close()
+            root.after(options.auto_close_ms, close_preview)
     root.mainloop()

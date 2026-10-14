@@ -31,6 +31,37 @@ class CaptureTests(unittest.TestCase):
 
 
 class TimerGuiTests(unittest.TestCase):
+    def test_version_and_new_presets(self):
+        self.assertEqual(self.root.title(), "Sleep Timer 1.1.3")
+        for minutes in (1, 2, 3, 5):
+            button = next(b for b in self.app.preset_buttons if b['text'] == str(minutes))
+            button.invoke()
+            self.assertEqual(self.app.minutes_var.get(), str(minutes))
+
+    def test_cancel_red_across_themes_and_resets(self):
+        self.app.start_countdown()
+        for theme in ('light', 'dark'):
+            self.app.theme_var.set(theme)
+            self.app.apply_theme()
+            self.assertEqual(self.app.abort_button['bg'], self.app.theme['danger'])
+            self.app._hover_button(self.app.abort_button, True)
+            self.assertEqual(self.app.abort_button['bg'], self.app.theme['danger_hover'])
+            self.app._hover_button(self.app.abort_button, False)
+        self.app.abort_countdown()
+        self.assertEqual(self.app.abort_button['bg'], self.app.theme['surface'])
+
+    def test_hover_and_disabled_hover(self):
+        button = self.app.preset_buttons[0]
+        normal = button['bg']
+        self.app._hover_button(button, True)
+        self.assertEqual(button['bg'], self.app.theme['hover'])
+        self.app._hover_button(button, False)
+        self.assertEqual(button['bg'], normal)
+        self.app._hover_button(self.app.start_button, True)
+        self.assertEqual(self.app.start_button['bg'], self.app.theme['accent_hover'])
+        self.app.start_countdown()
+        self.assertEqual(self.app.start_button['bg'], self.app.theme['accent'])
+
     def setUp(self):
         self.root = tk.Tk()
         self.app = SleepTimerApp(self.root)

@@ -2,16 +2,18 @@
 
 A compact Windows sleep timer with large, high-contrast time controls.
 
-## Download 1.1.2
+## Download 1.1.3
 
-[Download SleepTimer_1.1.2.exe for Windows x64](https://github.com/jamps3/Sleep-Timer/raw/refs/heads/main/dist/SleepTimer_1.1.2.exe)
+[Download SleepTimer_1.1.3.exe for Windows x64](https://github.com/jamps3/Sleep-Timer/raw/refs/heads/main/dist/SleepTimer_1.1.3.exe)
 
 No Python installation is needed for the executable. This build is unsigned;
 Windows may show a reputation warning. Only run downloads from this repository.
 
 ## Features
 
-- Eight visible minute presets: 15, 30, 45, 60, 75, 90, 105 and 120.
+- Twelve visible minute presets: 1, 2, 3, 5, 15, 30, 45, 60, 75, 90, 105 and 120.
+- Version number in the window title, sourced from the bundled VERSION file.
+- Red Cancel button while a timer runs, with theme-aware hover feedback on buttons.
 - Large custom input accepting 1 to 9,999,999 whole minutes (maximum seven digits).
 - Live countdown, scheduled sleep time and progress indicator.
 - Start and Cancel controls; Enter starts and Escape cancels a running timer.
@@ -39,7 +41,9 @@ the action buttons. GUI updates run on Tk's main thread.
 
 | Dark | Light |
 |---|---|
-| ![Dark timer](previews/sleep-timer-dark-black.png) | ![Light timer](previews/sleep-timer-light-black.png) |
+| ![Dark timer](previews/v1.1.3/sleep-timer-dark-black.png) | ![Light timer](previews/v1.1.3/sleep-timer-light-black.png) |
+
+![Active timer with red Cancel button](previews/v1.1.3/sleep-timer-dark-running-black.png)
 
 Original `screenshot.png` and `screenshot2.png` are retained. See [CAPTURE.md](CAPTURE.md)
 for reusable window capture, transparent padding and safe preview generation.
@@ -52,7 +56,7 @@ py preview_timer.py --output-dir previews
 ```
 
 The preview runner disables sleep. Automated tests do not exercise actual system
-suspension or wake-up. Version 1.1.2 is packaged with PyInstaller and smoke-tested
+suspension or wake-up. Version 1.1.3 is packaged with PyInstaller and smoke-tested
 in safe preview mode; real system suspension/wake-up is not yet tested.
 
 ## Building
@@ -62,7 +66,8 @@ is not incremented automatically. The checked-in spec handles embedded Tcl/Tk 9
 resources as well as conventional Tcl/Tk installations.
 
 ```powershell
-py capture_release.py dist/SleepTimer_1.1.2.exe --output-dir previews
+py capture_release.py dist/SleepTimer_1.1.3.exe --output-dir previews/v1.1.3
+py capture_release.py dist/SleepTimer_1.1.3.exe --output-dir previews/v1.1.3 --running
 ```
 
 This captures the packaged app in both themes with sleep disabled. FrameFree is

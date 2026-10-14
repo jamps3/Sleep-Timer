@@ -1,4 +1,25 @@
-# Sleep Timer 1.1.2
+# Sleep Timer 1.1.3
+
+Released: 2026-10-15. Windows x64, unsigned standalone executable.
+
+- Window title displays 1.1.3, read from the same VERSION file used by the build.
+- Cancel is red while a countdown runs, including after theme changes.
+- Theme-aware hover feedback on preset, Start and Cancel buttons; disabled
+  buttons do not change appearance on hover.
+- Added 1, 2, 3 and 5 minute presets; all eight earlier presets remain.
+- VERSION is bundled in the executable so its title cannot use an old hardcoded value.
+
+Verification: nine safe source/GUI tests pass. Packaged idle and running preview
+modes tested in light/dark themes without invoking Windows sleep. Real system
+suspend/wake remains untested. Previous release executables are preserved.
+
+SHA256 (`dist/SleepTimer_1.1.3.exe`):
+
+```text
+d7b6f8076520efefbd044690e14b5f8ca2d5dd674d63574c54d1d9aa0832ecf3
+```
+
+## Sleep Timer 1.1.2
 
 Released: 2026-10-13. Windows x64, unsigned standalone executable.
 

@@ -3,7 +3,7 @@ from pathlib import Path
 
 version = Path('VERSION').read_text(encoding='utf-8').strip()
 embedded_tcl = tkinter.Tcl().eval('info library').startswith('//zipfs:')
-a = Analysis(['sleep_timer_gui.py'], pathex=[], binaries=[], datas=[],
+a = Analysis(['sleep_timer_gui.py'], pathex=[], binaries=[], datas=[('VERSION', '.')],
              hiddenimports=[], hookspath=[], hooksconfig={}, runtime_hooks=[],
              excludes=[], noarchive=False, optimize=0)
 # Tcl/Tk 9 DLLs contain their own zipfs libraries; the standard hook wrongly
